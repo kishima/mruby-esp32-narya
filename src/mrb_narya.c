@@ -17,8 +17,10 @@ void mrb_mruby_esp32_narya_gem_init(mrb_state *mrb)
   struct RClass *narya;
   narya = mrb_define_class(mrb, "Narya", mrb->object_class);
   mrb_define_method(mrb, narya, "initialize", mrb_narya_init, MRB_ARGS_REQ(1));
-  mrb_define_method(mrb, narya, "hello", mrb_narya_hello, MRB_ARGS_NONE());
-  mrb_define_class_method(mrb, narya, "hi", mrb_narya_hi, MRB_ARGS_NONE());
+  //mrb_define_method(mrb, narya, "init_fabgl", mrb_narya_, MRB_ARGS_NONE());
+  //mrb_define_method(mrb, narya, "demo", mrb_narya_hello, MRB_ARGS_NONE());
+  mrb_define_class_method(mrb, narya, "start", mrb_narya_start, MRB_ARGS_NONE());
+  mrb_define_class_method(mrb, narya, "demo", mrb_narya_demo, MRB_ARGS_NONE());
   DONE;
 }
 
