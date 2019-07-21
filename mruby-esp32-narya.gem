@@ -1,0 +1,7 @@
+name: mruby-esp32-narya
+description: Narya class
+author: KAGEYAMA Katsuhiko
+website: https://github.com/kishima/mruby-esp32-narya
+protocol: git
+repository: https://github.com/kishima/mruby-esp32-narya.git
+license: GPLv3
