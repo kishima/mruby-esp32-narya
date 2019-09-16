@@ -24,7 +24,8 @@
   #define VGA_BLUE1  GPIO_NUM_5
   #define VGA_BLUE0  GPIO_NUM_4
   #define VGA_HSYNC  GPIO_NUM_23
-  #define VGA_VSYNC  GPIO_NUM_15
+  //#define VGA_VSYNC  GPIO_NUM_15
+  #define VGA_VSYNC  GPIO_NUM_27
 #endif
 
 #define DOUBLEBUFFERING 1
@@ -108,7 +109,6 @@ mrb_value mrb_narya_start(mrb_state *mrb, mrb_value self)
 
 mrb_value mrb_narya_demo(mrb_state *mrb, mrb_value self)
 {
-  ESP_LOGI("narya", "mrb_narya_demo");
 
   static int64_t stime  = esp_timer_get_time();
   static int FPS        = 0;
@@ -138,6 +138,7 @@ mrb_value mrb_narya_demo(mrb_state *mrb, mrb_value self)
     FPS = FPSCounter;
     stime = esp_timer_get_time();
     FPSCounter = 0;
+    ESP_LOGI("narya", "fps:%d",FPS);
   }
   ++FPSCounter;
 
@@ -151,7 +152,6 @@ mrb_value mrb_narya_demo(mrb_state *mrb, mrb_value self)
   if (DOUBLEBUFFERING)
     Canvas.swapBuffers();
 
-  //return mrb_str_new_cstr(mrb, "hi!!");
   return self;
 }
 
