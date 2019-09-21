@@ -14,13 +14,9 @@
 
 #define DONE mrb_gc_arena_restore(mrb, 0);
 
-//struct RClass *narya_data_class = NULL;
-
 void mrb_mruby_esp32_narya_gem_init(mrb_state *mrb)
 {
   struct RClass *narya_module = mrb_define_module(mrb, "Narya");
-
-  //struct RClass *narya_data_class = mrb_define_class_under(mrb, narya_module, "CData", mrb->object_class);
 
   struct RClass *display_module = mrb_define_module_under(mrb, narya_module, "Display");
 

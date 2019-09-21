@@ -1,3 +1,11 @@
+/*
+** mrb_narya_display.c - Narya Display class
+**
+** Copyright (c) KAGEYAMA Katsuhiko 2019
+**
+** See Copyright Notice in LICENSE
+*/
+
 #include "mruby.h"
 #include "mruby/data.h"
 #include "mruby/variable.h"
@@ -78,6 +86,8 @@ mrb_value mrb_narya_display_swap(mrb_state *mrb, mrb_value self)
   return self;
 }
 
+//This spaceship_data is from "https://github.com/fdivitto/FabGL"
+//(c) Fabrizio Di Vittorio
 const uint8_t spaceship_data[] = {
   0x00, 0x00, 0xd5, 0xd5, 0xd9, 0xd9, 0xd9, 0xd9, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
   0x00, 0x00, 0x00, 0x00, 0x00, 0xe9, 0xea, 0xc0, 0x00, 0x00, 0xd4, 0xd4, 0xd4, 0x00, 0x00, 0x00,
@@ -111,7 +121,6 @@ static struct mrb_data_type mrb_sprite_cdata_type = { "Sprite", sprite_cdata_fre
 mrb_value mrb_narya_sprite_initialize(mrb_state *mrb, mrb_value self)
 {
   Sprite * newSprite = &sprites_list[0];
-  //sprites_list[0] = newSprite;
   newSprite->addBitmap(&spaceship);
   
   VGAController.setSprites(sprites_list, 1);
@@ -138,7 +147,6 @@ mrb_value mrb_narya_sprite_move(mrb_state *mrb, mrb_value self)
   mrb_get_args(mrb, "ii", &x,&y);
   Sprite * sprite = (Sprite*)DATA_PTR(self);
   sprite->move(x, y, true);
-  //ESP_LOGI("mruby","move(%d,%d)[%p]\n",x,y,sprite);
   return self;
 }
 
