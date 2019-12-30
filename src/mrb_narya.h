@@ -9,18 +9,38 @@
 
 MRB_BEGIN_DECL
 
+extern const uint8_t spaceship_data[];
+extern const uint8_t testimg_data[];
+
 extern struct RClass *narya_data_class;
 
 void mrb_mruby_narya_gem_init(mrb_state *mrb);
 
+//Display class
 mrb_value mrb_narya_display_draw_circle(mrb_state *mrb, mrb_value self);
 mrb_value mrb_narya_display_draw_text(mrb_state *mrb, mrb_value self);
 mrb_value mrb_narya_display_clear(mrb_state *mrb, mrb_value self);
-mrb_value mrb_narya_display_swap(mrb_state *mrb, mrb_value self);
+mrb_value mrb_narya_display_load_bitmap(mrb_state *mrb, mrb_value self);
 
+mrb_value mrb_narya_display_swap(mrb_state *mrb, mrb_value self);
+mrb_value mrb_narya_display_scroll(mrb_state *mrb, mrb_value self);
+mrb_value mrb_narya_display_width(mrb_state *mrb, mrb_value self);
+mrb_value mrb_narya_display_height(mrb_state *mrb, mrb_value self);
+
+//Input class
+mrb_value mrb_narya_input_available(mrb_state *mrb, mrb_value self);
+mrb_value mrb_narya_input_keydown(mrb_state *mrb, mrb_value self);
+
+//Bitmap class
+mrb_value mrb_narya_bitmap_initialize(mrb_state *mrb, mrb_value self);
+mrb_value mrb_narya_bitmap_draw(mrb_state *mrb, mrb_value self);
+
+//Sprite class
 mrb_value mrb_narya_sprite_initialize(mrb_state *mrb, mrb_value self);
 mrb_value mrb_narya_sprite_move_to(mrb_state *mrb, mrb_value self);
 mrb_value mrb_narya_sprite_move(mrb_state *mrb, mrb_value self);
+
+//Sound class
 
 MRB_END_DECL
 
