@@ -14,19 +14,23 @@
 #include "fabgl.h"
 #include "fabutils.h"
 
+extern fabgl::PS2Controller PS2Controller;
+
 MRB_BEGIN_DECL
 mrb_value mrb_narya_input_available(mrb_state *mrb, mrb_value self)
 {
-  bool ret = Keyboard.isKeyboardAvailable();
+  auto keyboard = PS2Controller.keyboard();
+  bool ret = keyboard->isKeyboardAvailable();
   return ret ? mrb_true_value() : mrb_false_value();
 }
 
 mrb_value mrb_narya_input_keydown(mrb_state *mrb, mrb_value self)
 {
-  if(Keyboard.isKeyboardAvailable()){
+  auto keyboard = PS2Controller.keyboard();
+  if(keyboard->isKeyboardAvailable()){
     mrb_int vkey;
     mrb_get_args(mrb, "i", &vkey);
-    bool ret = Keyboard.isVKDown((fabgl::VirtualKey)vkey);
+    bool ret = keyboard->isVKDown((fabgl::VirtualKey)vkey);
     return ret ? mrb_true_value() : mrb_false_value();
   }
   return mrb_false_value();

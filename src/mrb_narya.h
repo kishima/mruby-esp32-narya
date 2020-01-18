@@ -9,8 +9,8 @@
 
 MRB_BEGIN_DECL
 
-extern const uint8_t spaceship_data[];
-extern const uint8_t testimg_data[];
+extern uint8_t spaceship_data[];
+//extern uint8_t testimg_data[];
 
 extern struct RClass *narya_data_class;
 

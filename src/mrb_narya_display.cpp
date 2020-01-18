@@ -14,6 +14,10 @@
 #include "fabgl.h"
 #include "fabutils.h"
 
+extern fabgl::VGAController VGAController;
+extern fabgl::Canvas        FMRB_canvas;
+
+
 MRB_BEGIN_DECL
 
 mrb_value mrb_narya_display_draw_circle(mrb_state *mrb, mrb_value self)
@@ -55,8 +59,8 @@ mrb_value mrb_narya_display_draw_circle(mrb_state *mrb, mrb_value self)
       break;
   }
 
-  Canvas.setBrushColor(color);
-  Canvas.fillEllipse(x, y, r, r);
+  FMRB_canvas.setBrushColor(color);
+  FMRB_canvas.fillEllipse(x, y, r, r);
   return self;
 }
 
@@ -66,23 +70,23 @@ mrb_value mrb_narya_display_draw_text(mrb_state *mrb, mrb_value self)
   mrb_int y;
   char * string = NULL;
   mrb_get_args(mrb, "iiz", &x,&y,&string);
-  Canvas.setPenColor(Color::Blue);
-  Canvas.setBrushColor(Color::Yellow);
-  Canvas.drawTextFmt(x, y, "%s", string);
+  FMRB_canvas.setPenColor(Color::Blue);
+  FMRB_canvas.setBrushColor(Color::Yellow);
+  FMRB_canvas.drawTextFmt(x, y, "%s", string);
   return self;
 }
 
 mrb_value mrb_narya_display_clear(mrb_state *mrb, mrb_value self)
 {
-  Canvas.setBrushColor(Color::Black);
-  Canvas.clear();
+  FMRB_canvas.setBrushColor(Color::Black);
+  FMRB_canvas.clear();
   return self;
 }
 
 mrb_value mrb_narya_display_swap(mrb_state *mrb, mrb_value self)
 {
   VGAController.refreshSprites();
-  Canvas.swapBuffers();
+  FMRB_canvas.swapBuffers();
   return self;
 }
 
@@ -117,8 +121,8 @@ static void bitmap_cdata_free(mrb_state *mrb, void* value)
 }
 static struct mrb_data_type mrb_bitmap_cdata_type = { "Bitmap", bitmap_cdata_free };
 
-const Bitmap spaceship = Bitmap(16, 16, &spaceship_data[0]);
-Bitmap testimg = Bitmap(145, 160, &testimg_data[0]);
+const Bitmap spaceship = Bitmap(16, 16, &spaceship_data[0], PixelFormat::RGBA2222);
+//Bitmap testimg = Bitmap(145, 160, &testimg_data[0], PixelFormat::RGBA2222);
 
 mrb_value mrb_narya_bitmap_initialize(mrb_state *mrb, mrb_value self)
 {
@@ -126,7 +130,7 @@ mrb_value mrb_narya_bitmap_initialize(mrb_state *mrb, mrb_value self)
   mrb_int height;
   mrb_get_args(mrb, "ii", &width,&height);
   DATA_TYPE(self) = &mrb_bitmap_cdata_type;
-  DATA_PTR(self) = &testimg;
+  //DATA_PTR(self) = &testimg;
   return self;
 }
 
@@ -178,7 +182,7 @@ mrb_value mrb_narya_sprite_move(mrb_state *mrb, mrb_value self)
   mrb_int y;
   mrb_get_args(mrb, "ii", &x,&y);
   Sprite * sprite = (Sprite*)DATA_PTR(self);
-  sprite->move(x, y, true);
+  sprite->moveBy(x, y);
   return self;
 }
 
