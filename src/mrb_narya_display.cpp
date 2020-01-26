@@ -160,6 +160,7 @@ static void bitmap_cdata_free(mrb_state *mrb, void* value)
   //free alloced heap
   if(value){
     Bitmap* bitmap_p = (Bitmap*)value;
+    FMRB_DEBUG(FMRB_LOG::DEBUG,"bitmap free:%p\n",bitmap_p);
     fmrb_free((bitmap_p->data)-(FMRB_BITMAP_HEADER_SIZE+4));
   }
 
@@ -167,7 +168,7 @@ static void bitmap_cdata_free(mrb_state *mrb, void* value)
 }
 static struct mrb_data_type mrb_bitmap_cdata_type = { "Bitmap", bitmap_cdata_free };
 
-const Bitmap spaceship = Bitmap(16, 16, &spaceship_data[0], PixelFormat::RGBA2222);
+//const Bitmap spaceship = Bitmap(16, 16, &spaceship_data[0], PixelFormat::RGBA2222);
 //Bitmap testimg = Bitmap(145, 160, &testimg_data[0], PixelFormat::RGBA2222);
 
 mrb_value mrb_narya_bitmap_initialize(mrb_state *mrb, mrb_value self)
@@ -183,8 +184,8 @@ mrb_value mrb_narya_bitmap_draw(mrb_state *mrb, mrb_value self)
   mrb_int x0;
   mrb_int y0;
   mrb_get_args(mrb, "ii", &x0,&y0);
-  FMRB_DEBUG(FMRB_LOG::DEBUG,"bitmap_p:%p\n",bitmap_p);
-  FMRB_DEBUG(FMRB_LOG::DEBUG,"draw:%d %d\n",x0,y0);
+  //FMRB_DEBUG(FMRB_LOG::DEBUG,"bitmap_p:%p\n",bitmap_p);
+  //FMRB_DEBUG(FMRB_LOG::DEBUG,"draw:%d %d\n",x0,y0);
   FMRB_canvas.drawBitmap(x0,y0,bitmap_p);
   return self;
 }
@@ -201,17 +202,16 @@ mrb_value mrb_narya_bitmap_load(mrb_state *mrb, mrb_value self)
   char* data = FMRB_storage.load_bitmap(string,width,height,type);
   if(!data)
   {
-    //mrb_raise();
+    mrb_raise(mrb,E_RUNTIME_ERROR,"load bitmap error");
   }
   const int header = 4;
-  FMRB_DEBUG(FMRB_LOG::DEBUG,"w:%d h:%d\n",(int)width,(int)height);
+  //FMRB_DEBUG(FMRB_LOG::DEBUG,"w:%d h:%d\n",(int)width,(int)height);
   mrb_iv_set(mrb,self,mrb_intern_cstr(mrb, "@width"),mrb_fixnum_value(width));
   mrb_iv_set(mrb,self,mrb_intern_cstr(mrb, "@height"),mrb_fixnum_value(height));
 
   Bitmap* bitmap_p = (Bitmap*)malloc(sizeof(Bitmap));
   *bitmap_p = Bitmap((int)width, (int)height, (void*)(data+FMRB_BITMAP_HEADER_SIZE+4), PixelFormat::RGBA2222);
-  FMRB_DEBUG(FMRB_LOG::DEBUG,"bitmap_p:%p\n",bitmap_p);
-
+  //FMRB_DEBUG(FMRB_LOG::DEBUG,"bitmap_p:%p\n",bitmap_p);
   DATA_PTR(self) = bitmap_p;
 
   return self;
@@ -221,10 +221,44 @@ mrb_value mrb_narya_bitmap_load(mrb_state *mrb, mrb_value self)
  * Sprite
  */
 
-Sprite *sprites_list = new Sprite[10];
+#define MAX_SPRITES (10)
+Sprite* sprites_list = new Sprite[MAX_SPRITES];
+
+void mrb_narya_init_resouce(void){
+  int i=0;
+  for(i=0;i<MAX_SPRITES;i++){
+    sprites_list[i]=Sprite();
+  }
+}
+
+static Sprite* get_sprite_ref(void){
+  int i=0;
+  for(i=0;i<MAX_SPRITES;i++){
+    if(sprites_list[i].framesCount==0){
+      return &sprites_list[i];
+    }
+  }
+  return NULL;
+}
+
+static void free_sprite(Sprite* ptr){
+  ptr->clearBitmaps();
+  int i=0;
+  for(i=0;i<MAX_SPRITES;i++){
+    if(&sprites_list[i]==ptr){
+      delete &sprites_list[i];
+      break;
+    }
+  }
+}
 
 static void sprite_cdata_free(mrb_state *mrb, void* value)
 {
+  if(value){
+    Sprite* sprite_p = (Sprite*)value;
+    FMRB_DEBUG(FMRB_LOG::DEBUG,"Sprite:free sprite_p:%p\n",sprite_p);
+    free_sprite(sprite_p);
+  }
   mrb_free(mrb,value);
 }
 static struct mrb_data_type mrb_sprite_cdata_type = { "Sprite", sprite_cdata_free };
@@ -232,12 +266,23 @@ static struct mrb_data_type mrb_sprite_cdata_type = { "Sprite", sprite_cdata_fre
 mrb_value mrb_narya_sprite_initialize(mrb_state *mrb, mrb_value self)
 {
   mrb_value bitmap_obj;
-  //mrb_get_args(mrb, "o", &bitmap_obj);
+  mrb_get_args(mrb, "o", &bitmap_obj);
 
-  Sprite * newSprite = &sprites_list[0];
-  newSprite->addBitmap(&spaceship);
+  Bitmap* bitmap_p = (Bitmap*)DATA_PTR(bitmap_obj);
+  if(!bitmap_p){
+    mrb_raise(mrb,E_RUNTIME_ERROR,"null bitmap ptr");
+  } 
+  FMRB_DEBUG(FMRB_LOG::DEBUG,"Sprite:bitmap_p:%p\n",bitmap_p);
+
+  AutoSuspendInterrupts autoSuspendInt;
+
+  Sprite* newSprite = get_sprite_ref();
+  if(!newSprite){
+    mrb_raise(mrb,E_RUNTIME_ERROR,"Sprite alloc error");
+  }
+  newSprite->addBitmap(bitmap_p);
   
-  VGAController.setSprites(sprites_list, 1);
+  VGAController.setSprites(sprites_list, MAX_SPRITES);
 
   DATA_TYPE(self) = &mrb_sprite_cdata_type;
   DATA_PTR(self) = newSprite;

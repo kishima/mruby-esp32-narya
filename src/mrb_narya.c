@@ -16,6 +16,8 @@
 
 void mrb_mruby_esp32_narya_gem_init(mrb_state *mrb)
 {
+  mrb_narya_init_resouce();
+
   struct RClass *narya_module = mrb_define_module(mrb, "Narya");
 
   struct RClass *display_module = mrb_define_module_under(mrb, narya_module, "Display");
@@ -50,7 +52,7 @@ void mrb_mruby_esp32_narya_gem_init(mrb_state *mrb)
 
   struct RClass *sprite_class = mrb_define_class_under(mrb, narya_module, "Sprite", mrb->object_class);
   MRB_SET_INSTANCE_TT(sprite_class, MRB_TT_DATA);
-  mrb_define_method(mrb, sprite_class, "initialize", mrb_narya_sprite_initialize, MRB_ARGS_NONE());
+  mrb_define_method(mrb, sprite_class, "initialize", mrb_narya_sprite_initialize, MRB_ARGS_REQ(1));
   mrb_define_method(mrb, sprite_class, "move_to", mrb_narya_sprite_move_to, MRB_ARGS_REQ(2));
   mrb_define_method(mrb, sprite_class, "move", mrb_narya_sprite_move, MRB_ARGS_REQ(2));
   

@@ -16,6 +16,8 @@ extern struct RClass *narya_data_class;
 
 void mrb_mruby_narya_gem_init(mrb_state *mrb);
 
+void mrb_narya_init_resouce(void);
+
 //Display class
 mrb_value mrb_narya_display_draw_circle(mrb_state *mrb, mrb_value self);
 mrb_value mrb_narya_display_draw_text(mrb_state *mrb, mrb_value self);
