@@ -21,6 +21,7 @@ mrb_value mrb_narya_display_draw_circle(mrb_state *mrb, mrb_value self);
 mrb_value mrb_narya_display_draw_text(mrb_state *mrb, mrb_value self);
 mrb_value mrb_narya_display_clear(mrb_state *mrb, mrb_value self);
 mrb_value mrb_narya_display_load_bitmap(mrb_state *mrb, mrb_value self);
+mrb_value mrb_narya_display_draw_picture(mrb_state *mrb, mrb_value self);
 
 mrb_value mrb_narya_display_swap(mrb_state *mrb, mrb_value self);
 mrb_value mrb_narya_display_scroll(mrb_state *mrb, mrb_value self);
@@ -34,6 +35,7 @@ mrb_value mrb_narya_input_keydown(mrb_state *mrb, mrb_value self);
 //Bitmap class
 mrb_value mrb_narya_bitmap_initialize(mrb_state *mrb, mrb_value self);
 mrb_value mrb_narya_bitmap_draw(mrb_state *mrb, mrb_value self);
+mrb_value mrb_narya_bitmap_load(mrb_state *mrb, mrb_value self);
 
 //Sprite class
 mrb_value mrb_narya_sprite_initialize(mrb_state *mrb, mrb_value self);

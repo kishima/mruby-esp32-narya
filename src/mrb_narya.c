@@ -36,6 +36,8 @@ void mrb_mruby_esp32_narya_gem_init(mrb_state *mrb)
   mrb_define_module_function(mrb, display_module, "clear", mrb_narya_display_clear, MRB_ARGS_NONE());
   mrb_define_module_function(mrb, display_module, "swap", mrb_narya_display_swap, MRB_ARGS_NONE());
 
+
+  mrb_define_module_function(mrb, display_module, "draw_picture", mrb_narya_display_draw_picture, MRB_ARGS_REQ(3));
   mrb_define_module_function(mrb, display_module, "load_bitmap", mrb_narya_display_load_bitmap, MRB_ARGS_NONE());
   mrb_define_module_function(mrb, display_module, "scroll", mrb_narya_display_scroll, MRB_ARGS_REQ(1));
 
@@ -53,8 +55,10 @@ void mrb_mruby_esp32_narya_gem_init(mrb_state *mrb)
   mrb_define_method(mrb, sprite_class, "move", mrb_narya_sprite_move, MRB_ARGS_REQ(2));
   
   struct RClass *bitmap_class = mrb_define_class_under(mrb, narya_module, "Bitmap", mrb->object_class);
+  MRB_SET_INSTANCE_TT(bitmap_class, MRB_TT_DATA);
   mrb_define_method(mrb, bitmap_class, "initialize", mrb_narya_bitmap_initialize, MRB_ARGS_NONE());
-  mrb_define_method(mrb, bitmap_class, "draw", mrb_narya_bitmap_draw, MRB_ARGS_NONE());
+  mrb_define_method(mrb, bitmap_class, "load", mrb_narya_bitmap_load, MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, bitmap_class, "draw", mrb_narya_bitmap_draw, MRB_ARGS_REQ(2));
 
 
   DONE;

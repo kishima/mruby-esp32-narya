@@ -14,11 +14,23 @@
 #include "fabgl.h"
 #include "fabutils.h"
 
+
+#include "fmruby.h"
+#include "fmruby_app.h"
+
+
 extern fabgl::VGAController VGAController;
 extern fabgl::Canvas        FMRB_canvas;
+extern FmrbFileService      FMRB_storage;;
 
+/*
+struct Fmrb_bitmap{
+  Bitmap* bitmap_p;
+};
+*/
 
 MRB_BEGIN_DECL
+
 
 mrb_value mrb_narya_display_draw_circle(mrb_state *mrb, mrb_value self)
 {
@@ -111,12 +123,46 @@ mrb_value mrb_narya_display_load_bitmap(mrb_state *mrb, mrb_value self)
   return self;
 }
 
+mrb_value mrb_narya_display_draw_picture(mrb_state *mrb, mrb_value self)
+{
+  //draw picuture of a file on storage instead of Bitmap
+  mrb_int x0;
+  mrb_int y0;
+  char * string = NULL;
+  mrb_get_args(mrb, "iiz", &x0,&y0,&string);
+  uint32_t fsize;
+
+  uint8_t* data = (uint8_t*)FMRB_storage.load(string,fsize,false,false);
+  const int header = 4;
+  uint16_t width  = (data[header]) + (data[header+1]<<8);
+  uint16_t height = (data[header+2]) + (data[header+3]<<8);
+  FMRB_DEBUG(FMRB_LOG::DEBUG,"img:%d,%d\n",width,height);
+
+  uint8_t* p = data+header+4;
+  for(uint16_t y=0;y<height;y++){
+    for(uint16_t x=0;x<width;x++){
+      if(((*p)&0xC0) == 0 ){ //check alpha
+        VGAController.setRawPixel(x0+x,y0+y,
+          VGAController.createRawPixel(RGB222((*p)&0x03, ((*p)&0x0C) >> 2, ((*p)&0x30) >> 4)));
+      }
+      p++;
+    }
+  }
+  return self;
+}
+
 /**
  * Bitmap
  **/
 
 static void bitmap_cdata_free(mrb_state *mrb, void* value)
 {
+  //free alloced heap
+  if(value){
+    Bitmap* bitmap_p = (Bitmap*)value;
+    fmrb_free((bitmap_p->data)-(FMRB_BITMAP_HEADER_SIZE+4));
+  }
+
   mrb_free(mrb,value);
 }
 static struct mrb_data_type mrb_bitmap_cdata_type = { "Bitmap", bitmap_cdata_free };
@@ -126,16 +172,48 @@ const Bitmap spaceship = Bitmap(16, 16, &spaceship_data[0], PixelFormat::RGBA222
 
 mrb_value mrb_narya_bitmap_initialize(mrb_state *mrb, mrb_value self)
 {
-  mrb_int width;
-  mrb_int height;
-  mrb_get_args(mrb, "ii", &width,&height);
   DATA_TYPE(self) = &mrb_bitmap_cdata_type;
-  //DATA_PTR(self) = &testimg;
+  DATA_PTR(self) = NULL;
   return self;
 }
 
 mrb_value mrb_narya_bitmap_draw(mrb_state *mrb, mrb_value self)
 {
+  Bitmap* bitmap_p = (Bitmap*)DATA_PTR(self);
+  mrb_int x0;
+  mrb_int y0;
+  mrb_get_args(mrb, "ii", &x0,&y0);
+  FMRB_DEBUG(FMRB_LOG::DEBUG,"bitmap_p:%p\n",bitmap_p);
+  FMRB_DEBUG(FMRB_LOG::DEBUG,"draw:%d %d\n",x0,y0);
+  FMRB_canvas.drawBitmap(x0,y0,bitmap_p);
+  return self;
+}
+
+mrb_value mrb_narya_bitmap_load(mrb_state *mrb, mrb_value self)
+{
+  fmrb_dump_mem_stat();
+  char * string = NULL;
+  mrb_get_args(mrb, "z", &string);
+  
+  uint16_t width;
+  uint16_t height;
+  uint32_t type;
+  char* data = FMRB_storage.load_bitmap(string,width,height,type);
+  if(!data)
+  {
+    //mrb_raise();
+  }
+  const int header = 4;
+  FMRB_DEBUG(FMRB_LOG::DEBUG,"w:%d h:%d\n",(int)width,(int)height);
+  mrb_iv_set(mrb,self,mrb_intern_cstr(mrb, "@width"),mrb_fixnum_value(width));
+  mrb_iv_set(mrb,self,mrb_intern_cstr(mrb, "@height"),mrb_fixnum_value(height));
+
+  Bitmap* bitmap_p = (Bitmap*)malloc(sizeof(Bitmap));
+  *bitmap_p = Bitmap((int)width, (int)height, (void*)(data+FMRB_BITMAP_HEADER_SIZE+4), PixelFormat::RGBA2222);
+  FMRB_DEBUG(FMRB_LOG::DEBUG,"bitmap_p:%p\n",bitmap_p);
+
+  DATA_PTR(self) = bitmap_p;
+
   return self;
 }
 
