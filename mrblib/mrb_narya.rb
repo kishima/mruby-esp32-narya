@@ -1,11 +1,11 @@
 module Narya
   class Color
+    attr_accessor :r,:g,:b
     def initialize(r,g,b)
       @r=r
       @g=g
       @b=b
     end
-    attr_accessor :r,:g,:b
   end
 
   RED = Color.new(3,0,0).freeze
@@ -24,6 +24,10 @@ module Narya
   end
 
   module Sound
+  end
+
+  class Bitmap
+    attr_reader :width,:height
   end
 
   class Sprite
