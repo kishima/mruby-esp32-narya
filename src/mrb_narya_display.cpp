@@ -23,11 +23,6 @@ extern fabgl::VGAController VGAController;
 extern fabgl::Canvas        FMRB_canvas;
 extern FmrbFileService      FMRB_storage;;
 
-/*
-struct Fmrb_bitmap{
-  Bitmap* bitmap_p;
-};
-*/
 
 MRB_BEGIN_DECL
 
@@ -90,9 +85,38 @@ mrb_value mrb_narya_display_draw_line(mrb_state *mrb, mrb_value self){
   char * col = NULL;
   mrb_get_args(mrb, "iiiiz", &x0,&y0,&x1,&y1,&col);
 
-  //FMRB_canvas.setBrushColor(str_to_color(col));
   FMRB_canvas.setPenColor(str_to_color(col));
   FMRB_canvas.drawLine(x0, y0, x1, y1);
+  return self;
+}
+
+mrb_value mrb_narya_display_draw_rect(mrb_state *mrb, mrb_value self){
+  mrb_int x0;
+  mrb_int y0;
+  mrb_int x1;
+  mrb_int y1;
+  char * col = NULL;
+  char * col2 = NULL;
+  bool opt = false;
+  mrb_get_args(mrb, "iiiiz|z?", &x0,&y0,&x1,&y1,&col,&col2,&opt);
+
+  if(opt){
+    FMRB_canvas.setBrushColor(str_to_color(col2));
+    FMRB_canvas.fillRectangle(x0, y0, x1, y1);
+  }
+  FMRB_canvas.setPenColor(str_to_color(col));
+  FMRB_canvas.drawRectangle(x0, y0, x1, y1);
+  return self;
+}
+
+mrb_value mrb_narya_display_draw_pixel(mrb_state *mrb, mrb_value self){
+  mrb_int x0;
+  mrb_int y0;
+  char * col = NULL;
+  mrb_get_args(mrb, "iiz", &x0,&y0,&col);
+
+  FMRB_canvas.setPenColor(str_to_color(col));
+  FMRB_canvas.setPixel(x0, y0);
   return self;
 }
 

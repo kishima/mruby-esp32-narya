@@ -22,6 +22,8 @@ mrb_value mrb_narya_display_clear(mrb_state *mrb, mrb_value self);
 mrb_value mrb_narya_display_load_bitmap(mrb_state *mrb, mrb_value self);
 mrb_value mrb_narya_display_draw_picture(mrb_state *mrb, mrb_value self);
 mrb_value mrb_narya_display_draw_line(mrb_state *mrb, mrb_value self);
+mrb_value mrb_narya_display_draw_rect(mrb_state *mrb, mrb_value self);
+mrb_value mrb_narya_display_draw_pixel(mrb_state *mrb, mrb_value self);
 
 mrb_value mrb_narya_display_swap(mrb_state *mrb, mrb_value self);
 mrb_value mrb_narya_display_scroll(mrb_state *mrb, mrb_value self);
