@@ -31,48 +31,68 @@ struct Fmrb_bitmap{
 
 MRB_BEGIN_DECL
 
+RGB888 str_to_color(const char* in){
+  RGB888 out = RGB888(255,255,255);
+  if(!in)return out;
+  if(strlen(in) > 0){
+    if(*in >= 0x30 && *in <= 0x33){
+      // "333" => WHITE
+      // "000" => BLACK
+      //   0 ..  63 => 0
+      //  64 .. 127 => 1
+      // 128 .. 191 => 2
+      // 192 .. 255 => 3
+      uint8_t r = (*in     - 0x30) * 64;
+      uint8_t g = (*(in+1) - 0x30) * 64;
+      uint8_t b = (*(in+2) - 0x30) * 64;
+      out = RGB888(r,g,b);
+    }else{
+      if(strcmp(in,"BLACK")==0){
+        out = RGB888(Color::Black);
+      }else if(strcmp(in,"RED")==0){
+        out = RGB888(Color::Red);
+      }else if(strcmp(in,"GREEN")==0){
+        out = RGB888(Color::Green);
+      }else if(strcmp(in,"YELLOW")==0){
+        out = RGB888(Color::Yellow);
+      }else if(strcmp(in,"BLUE")==0){
+        out = RGB888(Color::Blue);
+      }else if(strcmp(in,"MAGENTA")==0){
+        out = RGB888(Color::Magenta);
+      }else if(strcmp(in,"CYAN")==0){
+        out = RGB888(Color::Cyan);
+      }else if(strcmp(in,"WHITE")==0){
+        out = RGB888(Color::White);
+      }
+    }
+  }
+  return out;
+}
 
 mrb_value mrb_narya_display_draw_circle(mrb_state *mrb, mrb_value self)
 {
   mrb_int x;
   mrb_int y;
   mrb_int r;
-  mrb_int col;
-  mrb_get_args(mrb, "iiii", &x,&y,&r,&col);
+  char * col = NULL;
+  mrb_get_args(mrb, "iiiz", &x,&y,&r,&col);
 
-  Color color;
-  switch(col){
-    case 0:
-      color = Color::Black;
-      break;
-    case 1:
-      color = Color::Red;
-      break;
-    case 2:
-      color = Color::Green;
-      break;
-    case 3:
-      color = Color::Yellow;
-      break;
-    case 4:
-      color = Color::Blue;
-      break;
-    case 5:
-      color = Color::Magenta;
-      break;
-    case 6:
-      color = Color::Cyan;
-      break;
-    case 7:
-      color = Color::White;
-      break;
-    default:
-      color = Color::Black;
-      break;
-  }
-
-  FMRB_canvas.setBrushColor(color);
+  FMRB_canvas.setBrushColor(str_to_color(col));
   FMRB_canvas.fillEllipse(x, y, r, r);
+  return self;
+}
+
+mrb_value mrb_narya_display_draw_line(mrb_state *mrb, mrb_value self){
+  mrb_int x0;
+  mrb_int y0;
+  mrb_int x1;
+  mrb_int y1;
+  char * col = NULL;
+  mrb_get_args(mrb, "iiiiz", &x0,&y0,&x1,&y1,&col);
+
+  //FMRB_canvas.setBrushColor(str_to_color(col));
+  FMRB_canvas.setPenColor(str_to_color(col));
+  FMRB_canvas.drawLine(x0, y0, x1, y1);
   return self;
 }
 
