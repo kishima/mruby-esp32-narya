@@ -22,21 +22,26 @@ MRB_BEGIN_DECL
 mrb_value mrb_narya_input_available(mrb_state *mrb, mrb_value self)
 {
   auto keyboard = PS2Controller.keyboard();
-  bool ret = keyboard->virtualKeyAvailable();
-  return ret ? mrb_true_value() : mrb_false_value();
+  int ret = keyboard->virtualKeyAvailable();
+  return ret>0 ? mrb_true_value() : mrb_false_value();
 }
 
 mrb_value mrb_narya_input_keydown(mrb_state *mrb, mrb_value self)
 {
   auto keyboard = PS2Controller.keyboard();
 
-  if(keyboard->virtualKeyAvailable()){
+  int cnt = keyboard->virtualKeyAvailable(); 
+  if(cnt>0){
     mrb_int vkey;
     mrb_get_args(mrb, "i", &vkey);
 
     bool ret = keyboard->isVKDown((fabgl::VirtualKey)vkey);
     if(ret){
-      keyboard->emptyVirtualKeyQueue();
+      keyboard->getNextVirtualKey();
+    }
+    if(cnt>5){
+      keyboard->getNextVirtualKey();
+      //keyboard->emptyVirtualKeyQueue();
     }
     //FMRB_DEBUG(FMRB_LOG::DEBUG,"kdwn:%d:%d\n",vkey,ret);
     return ret ? mrb_true_value() : mrb_false_value();

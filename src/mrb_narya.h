@@ -9,9 +9,6 @@
 
 MRB_BEGIN_DECL
 
-extern uint8_t spaceship_data[];
-//extern uint8_t testimg_data[];
-
 extern struct RClass *narya_data_class;
 
 void mrb_mruby_narya_gem_init(mrb_state *mrb);

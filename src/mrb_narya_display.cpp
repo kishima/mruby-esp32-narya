@@ -168,9 +168,6 @@ static void bitmap_cdata_free(mrb_state *mrb, void* value)
 }
 static struct mrb_data_type mrb_bitmap_cdata_type = { "Bitmap", bitmap_cdata_free };
 
-//const Bitmap spaceship = Bitmap(16, 16, &spaceship_data[0], PixelFormat::RGBA2222);
-//Bitmap testimg = Bitmap(145, 160, &testimg_data[0], PixelFormat::RGBA2222);
-
 mrb_value mrb_narya_bitmap_initialize(mrb_state *mrb, mrb_value self)
 {
   DATA_TYPE(self) = &mrb_bitmap_cdata_type;
