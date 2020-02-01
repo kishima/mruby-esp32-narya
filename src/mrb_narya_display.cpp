@@ -70,10 +70,16 @@ mrb_value mrb_narya_display_draw_circle(mrb_state *mrb, mrb_value self)
   mrb_int y;
   mrb_int r;
   char * col = NULL;
-  mrb_get_args(mrb, "iiiz", &x,&y,&r,&col);
+  char * col2 = NULL;
+  bool opt = false;
+  mrb_get_args(mrb, "iiiz|z?", &x,&y,&r,&col,&col2,&opt);
 
-  FMRB_canvas.setBrushColor(str_to_color(col));
-  FMRB_canvas.fillEllipse(x, y, r, r);
+  if(opt){
+    FMRB_canvas.setBrushColor(str_to_color(col2));
+    FMRB_canvas.fillEllipse(x, y, r, r);
+  }
+  FMRB_canvas.setPenColor(str_to_color(col));
+  FMRB_canvas.drawEllipse(x,y,r,r);
   return self;
 }
 

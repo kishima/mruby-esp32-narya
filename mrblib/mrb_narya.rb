@@ -6,6 +6,9 @@ module Narya
       @g=g
       @b=b
     end
+    def to_s
+      "#{r},#{g},#{b}"
+    end
   end
 
   module Display
@@ -66,6 +69,32 @@ module Narya
     K_x      = 45
     K_y      = 46
     K_z      = 47
+    K_A      = 48
+    K_B      = 49
+    K_C      = 50
+    K_D      = 51
+    K_E      = 52
+    K_F      = 53
+    K_G      = 54
+    K_H      = 55
+    K_I      = 56
+    K_J      = 57
+    K_K      = 58
+    K_L      = 59
+    K_M      = 60
+    K_N      = 61
+    K_O      = 62
+    K_P      = 63
+    K_Q      = 64
+    K_R      = 65
+    K_S      = 66
+    K_T      = 67
+    K_U      = 68
+    K_V      = 69
+    K_W      = 70
+    K_X      = 71
+    K_Y      = 72
+    K_Z      = 73
     K_ESCAPE         = 125
     K_RETURN         = 144
     K_UP             = 151
