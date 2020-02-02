@@ -33,6 +33,7 @@ mrb_value mrb_narya_display_height(mrb_state *mrb, mrb_value self);
 //Input class
 mrb_value mrb_narya_input_available(mrb_state *mrb, mrb_value self);
 mrb_value mrb_narya_input_keydown(mrb_state *mrb, mrb_value self);
+mrb_value mrb_narya_input_get_key(mrb_state *mrb, mrb_value self);
 
 //Bitmap class
 mrb_value mrb_narya_bitmap_initialize(mrb_state *mrb, mrb_value self);

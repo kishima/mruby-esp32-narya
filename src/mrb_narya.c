@@ -46,6 +46,7 @@ void mrb_mruby_esp32_narya_gem_init(mrb_state *mrb)
   struct RClass *input_module = mrb_define_module_under(mrb, narya_module, "Input");
   mrb_define_module_function(mrb, input_module, "available", mrb_narya_input_available, MRB_ARGS_NONE());
   mrb_define_module_function(mrb, input_module, "keydown?", mrb_narya_input_keydown, MRB_ARGS_REQ(1));
+  mrb_define_module_function(mrb, input_module, "get_key", mrb_narya_input_get_key, MRB_ARGS_NONE());
 
 
   struct RClass *image_module = mrb_define_module_under(mrb, narya_module, "Image");

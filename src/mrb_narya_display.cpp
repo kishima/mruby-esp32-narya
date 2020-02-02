@@ -109,9 +109,14 @@ mrb_value mrb_narya_display_draw_rect(mrb_state *mrb, mrb_value self){
   if(opt){
     FMRB_canvas.setBrushColor(str_to_color(col2));
     FMRB_canvas.fillRectangle(x0, y0, x1, y1);
+    if(col!=col2){
+      FMRB_canvas.setPenColor(str_to_color(col));
+      FMRB_canvas.drawRectangle(x0, y0, x1, y1);
+    }
+  }else{
+    FMRB_canvas.setPenColor(str_to_color(col));
+    FMRB_canvas.drawRectangle(x0, y0, x1, y1);
   }
-  FMRB_canvas.setPenColor(str_to_color(col));
-  FMRB_canvas.drawRectangle(x0, y0, x1, y1);
   return self;
 }
 

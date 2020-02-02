@@ -49,4 +49,18 @@ mrb_value mrb_narya_input_keydown(mrb_state *mrb, mrb_value self)
   return mrb_false_value();
 }
 
+mrb_value mrb_narya_input_get_key(mrb_state *mrb, mrb_value self)
+{
+  auto keyboard = PS2Controller.keyboard();
+  mrb_int vkey = 0;
+  int cnt = keyboard->virtualKeyAvailable(); 
+  if(cnt==1){
+    vkey = keyboard->getNextVirtualKey();
+  }else if(cnt>1){
+    vkey = keyboard->getNextVirtualKey();
+    keyboard->emptyVirtualKeyQueue();
+  }
+  return mrb_fixnum_value(vkey);
+}
+
 MRB_END_DECL
