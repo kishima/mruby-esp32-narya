@@ -31,10 +31,6 @@ void mrb_mruby_esp32_narya_gem_init(mrb_state *mrb)
   mrb_define_module_function(mrb, display_module, "draw_rect", mrb_narya_display_draw_rect, MRB_ARGS_ARG(5,1));
   mrb_define_module_function(mrb, display_module, "draw_pixel", mrb_narya_display_draw_pixel, MRB_ARGS_REQ(3));
 
-  //Draw Ellipse
-  //Copy Rect
-  //Draw Draw Path(fill)
-
   mrb_define_module_function(mrb, display_module, "clear", mrb_narya_display_clear, MRB_ARGS_NONE());
   mrb_define_module_function(mrb, display_module, "swap", mrb_narya_display_swap, MRB_ARGS_NONE());
 
@@ -47,6 +43,7 @@ void mrb_mruby_esp32_narya_gem_init(mrb_state *mrb)
   mrb_define_module_function(mrb, input_module, "available", mrb_narya_input_available, MRB_ARGS_NONE());
   mrb_define_module_function(mrb, input_module, "keydown?", mrb_narya_input_keydown, MRB_ARGS_REQ(1));
   mrb_define_module_function(mrb, input_module, "get_key", mrb_narya_input_get_key, MRB_ARGS_NONE());
+  mrb_define_module_function(mrb, input_module, "paddown?", mrb_narya_input_pad_down, MRB_ARGS_REQ(1));
 
 
   struct RClass *image_module = mrb_define_module_under(mrb, narya_module, "Image");
@@ -63,6 +60,26 @@ void mrb_mruby_esp32_narya_gem_init(mrb_state *mrb)
   mrb_define_method(mrb, bitmap_class, "load", mrb_narya_bitmap_load, MRB_ARGS_REQ(1));
   mrb_define_method(mrb, bitmap_class, "draw", mrb_narya_bitmap_draw, MRB_ARGS_REQ(2));
 
+  struct RClass *config_module = mrb_define_module_under(mrb, narya_module, "Config");
+
+  mrb_define_module_function(mrb, config_module, "firmware_ver", mrb_narya_config_firmware_ver, MRB_ARGS_NONE());
+  mrb_define_module_function(mrb, config_module, "narya_ver", mrb_narya_config_narya_ver, MRB_ARGS_NONE());
+
+  /** To be implemented...
+  * Display module
+  *  Draw Ellipse
+  *  Copy Rect
+  *  Draw Draw Path(fill)
+  *  double_buffer?
+  * Storage module
+  *  open
+  *  read
+  *  write
+  *  close
+  * Sprite class
+  *  add_image
+  *  set_config
+  **/
 
   DONE;
 }

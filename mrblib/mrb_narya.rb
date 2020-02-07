@@ -102,4 +102,19 @@ module Narya
     K_LEFT           = 155
     K_RIGHT          = 157
   end
+  module Pad
+    NONE    = 0
+    A       = 1
+    B       = 2
+    X       = 3
+    Y       = 4
+    L       = 5
+    R       = 6
+    START   = 7
+    SELECT  = 8
+    UP      = 9
+    DOWN    = 10
+    LEFT    = 11
+    RIGHT   = 12
+  end
 end

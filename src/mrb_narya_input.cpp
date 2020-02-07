@@ -15,8 +15,10 @@
 #include "fabutils.h"
 
 #include "fmruby.h"
+#include "fmruby_app.h"
 
 extern fabgl::PS2Controller PS2Controller;
+extern FmrbSystemApp SystemApp;
 
 MRB_BEGIN_DECL
 mrb_value mrb_narya_input_available(mrb_state *mrb, mrb_value self)
@@ -61,6 +63,21 @@ mrb_value mrb_narya_input_get_key(mrb_state *mrb, mrb_value self)
     keyboard->emptyVirtualKeyQueue();
   }
   return mrb_fixnum_value(vkey);
+}
+
+mrb_value mrb_narya_input_pad_down(mrb_state *mrb, mrb_value self)
+{
+  FmrbMrubyEngine* engine = SystemApp.mruby_engign();
+  uint8_t *map = engine->get_joypad_map();
+
+  mrb_int pad;
+  mrb_get_args(mrb, "i", &pad);
+  if(pad>=(FMRB_JOYPAD_MAP_LENGTH) || pad<1){
+    return mrb_false_value();
+  }
+  if(map[pad])return mrb_true_value();
+
+  return mrb_false_value();
 }
 
 MRB_END_DECL

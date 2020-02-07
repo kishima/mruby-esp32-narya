@@ -12,6 +12,7 @@
 
 #include "fabgl.h"
 #include "fabutils.h"
+
 MRB_BEGIN_DECL
 
 MRB_END_DECL
