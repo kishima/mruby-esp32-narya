@@ -88,4 +88,5 @@ void mrb_mruby_esp32_narya_gem_init(mrb_state *mrb)
 
 void mrb_mruby_esp32_narya_gem_final(mrb_state *mrb)
 {
+  mrb_narya_finalize_resouce(mrb);
 }

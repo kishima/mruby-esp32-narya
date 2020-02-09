@@ -27,14 +27,14 @@ extern FmrbFileService      FMRB_storage;;
 MRB_BEGIN_DECL
 
 #define MAX_SPRITES (10)
-Sprite* sprites_list = new Sprite[MAX_SPRITES];
+Sprite* sprites_list = nullptr; 
+
 static RGB888 str_to_color(mrb_state *mrb, const char* in);
 
 void mrb_narya_init_resouce(mrb_state *mrb){
-  int i=0;
-  for(i=0;i<MAX_SPRITES;i++){
-    sprites_list[i]=Sprite();
-  }
+  FMRB_DEBUG(FMRB_LOG::DEBUG,"mrb_narya_init_resouce\n");
+  sprites_list = new Sprite[MAX_SPRITES];
+
   FMRB_canvas.setPenColor(str_to_color(mrb,"333"));
   FMRB_canvas.setBrushColor(str_to_color(mrb,"000"));
   FMRB_canvas.selectFont(fabgl::getPresetFixedFont(8,8));
@@ -42,6 +42,15 @@ void mrb_narya_init_resouce(mrb_state *mrb){
   FMRB_canvas.setGlyphOptions(GlyphOptions().FillBackground(false));
 }
 
+void mrb_narya_finalize_resouce(mrb_state *mrb){
+  FMRB_DEBUG(FMRB_LOG::DEBUG,"mrb_narya_finalize_resouce\n");
+  VGAController.removeSprites();
+  if(sprites_list){
+    delete[] sprites_list;
+  }
+  sprites_list = nullptr;
+  FMRB_DEBUG(FMRB_LOG::DEBUG,"mrb_narya_finalize_resouce done\n");
+}
 
 RGB888 str_to_color(mrb_state *mrb, const char* in){
   RGB888 out = RGB888(255,255,255);
@@ -330,6 +339,7 @@ static Sprite* get_sprite_ref(void){
   int i=0;
   for(i=0;i<MAX_SPRITES;i++){
     if(sprites_list[i].framesCount==0){
+      FMRB_DEBUG(FMRB_LOG::DEBUG,"get_sprite_ref[%d]:%p\n",i,&sprites_list[i]);
       return &sprites_list[i];
     }
   }
@@ -337,14 +347,7 @@ static Sprite* get_sprite_ref(void){
 }
 
 static void free_sprite(Sprite* ptr){
-  ptr->clearBitmaps();
-  int i=0;
-  for(i=0;i<MAX_SPRITES;i++){
-    if(&sprites_list[i]==ptr){
-      delete &sprites_list[i];
-      break;
-    }
-  }
+  //Sprite will be free by finalize function
 }
 
 static void sprite_cdata_free(mrb_state *mrb, void* value)
@@ -354,7 +357,7 @@ static void sprite_cdata_free(mrb_state *mrb, void* value)
     FMRB_DEBUG(FMRB_LOG::DEBUG,"Sprite:free sprite_p:%p\n",sprite_p);
     free_sprite(sprite_p);
   }
-  mrb_free(mrb,value);
+  //Sprite will be free by finalize function
 }
 static struct mrb_data_type mrb_sprite_cdata_type = { "Sprite", sprite_cdata_free };
 
@@ -376,6 +379,7 @@ mrb_value mrb_narya_sprite_initialize(mrb_state *mrb, mrb_value self)
     mrb_raise(mrb,E_RUNTIME_ERROR,"Sprite alloc error");
   }
   newSprite->addBitmap(bitmap_p);
+  FMRB_DEBUG(FMRB_LOG::DEBUG,"newSprite:%p\n",newSprite);
   
   VGAController.setSprites(sprites_list, MAX_SPRITES);
 
