@@ -259,9 +259,9 @@ mrb_value mrb_narya_display_draw_picture(mrb_state *mrb, mrb_value self)
 
   uint8_t* p = data+header+4;
   for(uint16_t y=0;y<height;y++){
-    if(maxy>=y0+y) break;
+    if(maxy<=y0+y) break;
     for(uint16_t x=0;x<width;x++){
-      if(maxx>=x0+x) break;
+      if(maxx<=x0+x) break;
       if(((*p)&0xC0) == 0 ){ //check alpha
         VGAController.setRawPixel(x0+x,y0+y,
           VGAController.createRawPixel(RGB222((*p)&0x03, ((*p)&0x0C) >> 2, ((*p)&0x30) >> 4)));
