@@ -15,11 +15,10 @@ extern struct RClass *narya_data_class;
 
 void mrb_mruby_narya_gem_init(mrb_state *mrb);
 
-void mrb_narya_init_resouce(void);
+void mrb_narya_init_resouce(mrb_state *mrb);
 
 //Display module
 mrb_value mrb_narya_display_draw_circle(mrb_state *mrb, mrb_value self);
-mrb_value mrb_narya_display_draw_text(mrb_state *mrb, mrb_value self);
 mrb_value mrb_narya_display_clear(mrb_state *mrb, mrb_value self);
 mrb_value mrb_narya_display_load_bitmap(mrb_state *mrb, mrb_value self);
 mrb_value mrb_narya_display_draw_picture(mrb_state *mrb, mrb_value self);
@@ -31,6 +30,9 @@ mrb_value mrb_narya_display_swap(mrb_state *mrb, mrb_value self);
 mrb_value mrb_narya_display_scroll(mrb_state *mrb, mrb_value self);
 mrb_value mrb_narya_display_width(mrb_state *mrb, mrb_value self);
 mrb_value mrb_narya_display_height(mrb_state *mrb, mrb_value self);
+
+mrb_value mrb_narya_display_font_size(mrb_state *mrb, mrb_value self);
+mrb_value mrb_narya_display_draw_text(mrb_state *mrb, mrb_value self);
 
 //Input module
 mrb_value mrb_narya_input_available(mrb_state *mrb, mrb_value self);

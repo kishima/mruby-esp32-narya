@@ -26,7 +26,24 @@ extern FmrbFileService      FMRB_storage;;
 
 MRB_BEGIN_DECL
 
-RGB888 str_to_color(const char* in){
+#define MAX_SPRITES (10)
+Sprite* sprites_list = new Sprite[MAX_SPRITES];
+static RGB888 str_to_color(mrb_state *mrb, const char* in);
+
+void mrb_narya_init_resouce(mrb_state *mrb){
+  int i=0;
+  for(i=0;i<MAX_SPRITES;i++){
+    sprites_list[i]=Sprite();
+  }
+  FMRB_canvas.setPenColor(str_to_color(mrb,"333"));
+  FMRB_canvas.setBrushColor(str_to_color(mrb,"000"));
+  FMRB_canvas.selectFont(fabgl::getPresetFixedFont(8,8));
+
+  FMRB_canvas.setGlyphOptions(GlyphOptions().FillBackground(false));
+}
+
+
+RGB888 str_to_color(mrb_state *mrb, const char* in){
   RGB888 out = RGB888(255,255,255);
   if(!in)return out;
   if(strlen(in) > 0){
@@ -58,8 +75,12 @@ RGB888 str_to_color(const char* in){
         out = RGB888(Color::Cyan);
       }else if(strcmp(in,"WHITE")==0){
         out = RGB888(Color::White);
+      }else{
+        mrb_raisef(mrb,E_ARGUMENT_ERROR,"Bad Color formart(%s)\n",in);
       }
     }
+  }else{
+    mrb_raise(mrb,E_ARGUMENT_ERROR,"Bad Color formart\n");
   }
   return out;
 }
@@ -75,10 +96,10 @@ mrb_value mrb_narya_display_draw_circle(mrb_state *mrb, mrb_value self)
   mrb_get_args(mrb, "iiiz|z?", &x,&y,&r,&col,&col2,&opt);
 
   if(opt){
-    FMRB_canvas.setBrushColor(str_to_color(col2));
+    FMRB_canvas.setBrushColor(str_to_color(mrb,col2));
     FMRB_canvas.fillEllipse(x, y, r, r);
   }
-  FMRB_canvas.setPenColor(str_to_color(col));
+  FMRB_canvas.setPenColor(str_to_color(mrb,col));
   FMRB_canvas.drawEllipse(x,y,r,r);
   return self;
 }
@@ -91,7 +112,7 @@ mrb_value mrb_narya_display_draw_line(mrb_state *mrb, mrb_value self){
   char * col = NULL;
   mrb_get_args(mrb, "iiiiz", &x0,&y0,&x1,&y1,&col);
 
-  FMRB_canvas.setPenColor(str_to_color(col));
+  FMRB_canvas.setPenColor(str_to_color(mrb,col));
   FMRB_canvas.drawLine(x0, y0, x1, y1);
   return self;
 }
@@ -107,14 +128,14 @@ mrb_value mrb_narya_display_draw_rect(mrb_state *mrb, mrb_value self){
   mrb_get_args(mrb, "iiiiz|z?", &x0,&y0,&x1,&y1,&col,&col2,&opt);
 
   if(opt){
-    FMRB_canvas.setBrushColor(str_to_color(col2));
+    FMRB_canvas.setBrushColor(str_to_color(mrb,col2));
     FMRB_canvas.fillRectangle(x0, y0, x1, y1);
     if(col!=col2){
-      FMRB_canvas.setPenColor(str_to_color(col));
+      FMRB_canvas.setPenColor(str_to_color(mrb,col));
       FMRB_canvas.drawRectangle(x0, y0, x1, y1);
     }
   }else{
-    FMRB_canvas.setPenColor(str_to_color(col));
+    FMRB_canvas.setPenColor(str_to_color(mrb,col));
     FMRB_canvas.drawRectangle(x0, y0, x1, y1);
   }
   return self;
@@ -126,8 +147,25 @@ mrb_value mrb_narya_display_draw_pixel(mrb_state *mrb, mrb_value self){
   char * col = NULL;
   mrb_get_args(mrb, "iiz", &x0,&y0,&col);
 
-  FMRB_canvas.setPenColor(str_to_color(col));
+  FMRB_canvas.setPenColor(str_to_color(mrb,col));
   FMRB_canvas.setPixel(x0, y0);
+  return self;
+}
+
+mrb_value mrb_narya_display_font_size(mrb_state *mrb, mrb_value self)
+{
+  mrb_int w;
+  mrb_int h;
+  mrb_get_args(mrb, "ii", &w,&h);
+  if(w<0 || h<0){
+    mrb_raise(mrb,E_ARGUMENT_ERROR,"Bad argument\n");
+  } 
+  const fabgl::FontInfo *info = fabgl::getPresetFixedFont(w,h);
+  if(info==nullptr){
+    mrb_raise(mrb,E_RUNTIME_ERROR,"Font not found\n");
+  }else{
+    FMRB_canvas.selectFont(info);
+  }
   return self;
 }
 
@@ -136,10 +174,20 @@ mrb_value mrb_narya_display_draw_text(mrb_state *mrb, mrb_value self)
   mrb_int x;
   mrb_int y;
   char * string = NULL;
-  mrb_get_args(mrb, "iiz", &x,&y,&string);
-  FMRB_canvas.setPenColor(Color::Blue);
-  FMRB_canvas.setBrushColor(Color::Yellow);
-  FMRB_canvas.drawTextFmt(x, y, "%s", string);
+  char * col = NULL;
+  char * col2 = NULL; //BG color option
+  bool opt = false;
+  mrb_get_args(mrb, "iizz|z?", &x,&y,&string,&col,&col2,&opt);
+
+  FMRB_canvas.setPenColor(str_to_color(mrb,col));
+  if(opt){
+    FMRB_canvas.setBrushColor(str_to_color(mrb,col2));
+    FMRB_canvas.setGlyphOptions(GlyphOptions().FillBackground(true));
+  }else{
+    FMRB_canvas.setGlyphOptions(GlyphOptions().FillBackground(false));
+  }
+  //FMRB_canvas.drawTextFmt(x, y, "%s", string);
+  FMRB_canvas.drawText(x,y,string);
   return self;
 }
 
@@ -189,13 +237,19 @@ mrb_value mrb_narya_display_draw_picture(mrb_state *mrb, mrb_value self)
 
   uint8_t* data = (uint8_t*)FMRB_storage.load(string,fsize,false,false);
   const int header = 4;
+
+  uint16_t maxx = VGAController.getScreenWidth();
+  uint16_t maxy = VGAController.getScreenHeight();
+
   uint16_t width  = (data[header]) + (data[header+1]<<8);
   uint16_t height = (data[header+2]) + (data[header+3]<<8);
   FMRB_DEBUG(FMRB_LOG::DEBUG,"img:%d,%d\n",width,height);
 
   uint8_t* p = data+header+4;
   for(uint16_t y=0;y<height;y++){
+    if(maxy>=y0+y) break;
     for(uint16_t x=0;x<width;x++){
+      if(maxx>=x0+x) break;
       if(((*p)&0xC0) == 0 ){ //check alpha
         VGAController.setRawPixel(x0+x,y0+y,
           VGAController.createRawPixel(RGB222((*p)&0x03, ((*p)&0x0C) >> 2, ((*p)&0x30) >> 4)));
@@ -272,17 +326,6 @@ mrb_value mrb_narya_bitmap_load(mrb_state *mrb, mrb_value self)
 /**
  * Sprite
  */
-
-#define MAX_SPRITES (10)
-Sprite* sprites_list = new Sprite[MAX_SPRITES];
-
-void mrb_narya_init_resouce(void){
-  int i=0;
-  for(i=0;i<MAX_SPRITES;i++){
-    sprites_list[i]=Sprite();
-  }
-}
-
 static Sprite* get_sprite_ref(void){
   int i=0;
   for(i=0;i<MAX_SPRITES;i++){

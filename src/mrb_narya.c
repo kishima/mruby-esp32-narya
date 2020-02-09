@@ -16,7 +16,7 @@
 
 void mrb_mruby_esp32_narya_gem_init(mrb_state *mrb)
 {
-  mrb_narya_init_resouce();
+  mrb_narya_init_resouce(mrb);
 
   struct RClass *narya_module = mrb_define_module(mrb, "Narya");
 
@@ -26,7 +26,6 @@ void mrb_mruby_esp32_narya_gem_init(mrb_state *mrb)
   mrb_define_module_function(mrb, display_module, "height", mrb_narya_display_height, MRB_ARGS_NONE());
 
   mrb_define_module_function(mrb, display_module, "draw_circle", mrb_narya_display_draw_circle, MRB_ARGS_REQ(4));
-  mrb_define_module_function(mrb, display_module, "draw_text", mrb_narya_display_draw_text, MRB_ARGS_REQ(3));
   mrb_define_module_function(mrb, display_module, "draw_line", mrb_narya_display_draw_line, MRB_ARGS_REQ(5));
   mrb_define_module_function(mrb, display_module, "draw_rect", mrb_narya_display_draw_rect, MRB_ARGS_ARG(5,1));
   mrb_define_module_function(mrb, display_module, "draw_pixel", mrb_narya_display_draw_pixel, MRB_ARGS_REQ(3));
@@ -34,10 +33,13 @@ void mrb_mruby_esp32_narya_gem_init(mrb_state *mrb)
   mrb_define_module_function(mrb, display_module, "clear", mrb_narya_display_clear, MRB_ARGS_NONE());
   mrb_define_module_function(mrb, display_module, "swap", mrb_narya_display_swap, MRB_ARGS_NONE());
 
-
   mrb_define_module_function(mrb, display_module, "draw_picture", mrb_narya_display_draw_picture, MRB_ARGS_REQ(3));
   mrb_define_module_function(mrb, display_module, "load_bitmap", mrb_narya_display_load_bitmap, MRB_ARGS_NONE());
   mrb_define_module_function(mrb, display_module, "scroll", mrb_narya_display_scroll, MRB_ARGS_REQ(1));
+
+  mrb_define_module_function(mrb, display_module, "font_size", mrb_narya_display_font_size, MRB_ARGS_REQ(2));
+  mrb_define_module_function(mrb, display_module, "draw_text", mrb_narya_display_draw_text, MRB_ARGS_ARG(4,1));
+
 
   struct RClass *input_module = mrb_define_module_under(mrb, narya_module, "Input");
   mrb_define_module_function(mrb, input_module, "available", mrb_narya_input_available, MRB_ARGS_NONE());
