@@ -35,7 +35,7 @@ void mrb_mruby_esp32_narya_gem_init(mrb_state *mrb)
 
   mrb_define_module_function(mrb, display_module, "draw_picture", mrb_narya_display_draw_picture, MRB_ARGS_REQ(3));
   mrb_define_module_function(mrb, display_module, "load_bitmap", mrb_narya_display_load_bitmap, MRB_ARGS_NONE());
-  mrb_define_module_function(mrb, display_module, "scroll", mrb_narya_display_scroll, MRB_ARGS_REQ(1));
+  mrb_define_module_function(mrb, display_module, "scroll", mrb_narya_display_scroll, MRB_ARGS_REQ(2));
 
   mrb_define_module_function(mrb, display_module, "font_size", mrb_narya_display_font_size, MRB_ARGS_REQ(2));
   mrb_define_module_function(mrb, display_module, "draw_text", mrb_narya_display_draw_text, MRB_ARGS_ARG(4,1));

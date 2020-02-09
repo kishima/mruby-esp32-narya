@@ -226,7 +226,10 @@ mrb_value mrb_narya_display_height(mrb_state *mrb, mrb_value self)
 
 mrb_value mrb_narya_display_scroll(mrb_state *mrb, mrb_value self)
 {
-
+  mrb_int x;
+  mrb_int y;
+  mrb_get_args(mrb, "ii", &x,&y);
+  FMRB_canvas.scroll(x,y);
   return self;
 }
 
