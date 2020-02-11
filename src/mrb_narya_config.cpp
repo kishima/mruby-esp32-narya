@@ -24,7 +24,7 @@ MRB_BEGIN_DECL
  **/
 mrb_value mrb_narya_config_firmware_ver(mrb_state *mrb, mrb_value self)
 {
-  return mrb_str_new_lit_frozen(mrb,ESP32_NARYA_VERSION);
+  return mrb_str_new_lit_frozen(mrb,FMRB_VERSION);
 }
 
 /**
@@ -32,7 +32,7 @@ mrb_value mrb_narya_config_firmware_ver(mrb_state *mrb, mrb_value self)
  **/
 mrb_value mrb_narya_config_narya_ver(mrb_state *mrb, mrb_value self)
 {
-  return mrb_str_new_lit_frozen(mrb,FMRB_VERSION);
+  return mrb_str_new_lit_frozen(mrb,ESP32_NARYA_VERSION);
 }
 
 

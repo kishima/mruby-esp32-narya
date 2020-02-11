@@ -9,7 +9,7 @@
 
 MRB_BEGIN_DECL
 
-#define ESP32_NARYA_VERSION "0.1.0"
+#define ESP32_NARYA_VERSION "0.2.0"
 
 extern struct RClass *narya_data_class;
 
