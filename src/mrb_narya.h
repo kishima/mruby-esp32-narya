@@ -27,6 +27,7 @@ mrb_value mrb_narya_display_draw_line(mrb_state *mrb, mrb_value self);
 mrb_value mrb_narya_display_draw_rect(mrb_state *mrb, mrb_value self);
 mrb_value mrb_narya_display_draw_pixel(mrb_state *mrb, mrb_value self);
 
+mrb_value mrb_narya_display_double_buffered(mrb_state *mrb, mrb_value self);
 mrb_value mrb_narya_display_swap(mrb_state *mrb, mrb_value self);
 mrb_value mrb_narya_display_scroll(mrb_state *mrb, mrb_value self);
 mrb_value mrb_narya_display_width(mrb_state *mrb, mrb_value self);

@@ -207,10 +207,20 @@ mrb_value mrb_narya_display_clear(mrb_state *mrb, mrb_value self)
   return self;
 }
 
+mrb_value mrb_narya_display_double_buffered(mrb_state *mrb, mrb_value self)
+{
+  if(VGAController.isDoubleBuffered()){
+    return mrb_true_value();
+  }
+  return mrb_false_value();
+}
+
 mrb_value mrb_narya_display_swap(mrb_state *mrb, mrb_value self)
 {
-  VGAController.refreshSprites();
-  FMRB_canvas.swapBuffers();
+  //VGAController.refreshSprites();
+  if(VGAController.isDoubleBuffered()){
+    FMRB_canvas.swapBuffers();
+  }
   return self;
 }
 

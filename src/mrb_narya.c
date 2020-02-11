@@ -31,6 +31,7 @@ void mrb_mruby_esp32_narya_gem_init(mrb_state *mrb)
   mrb_define_module_function(mrb, display_module, "draw_pixel", mrb_narya_display_draw_pixel, MRB_ARGS_REQ(3));
 
   mrb_define_module_function(mrb, display_module, "clear", mrb_narya_display_clear, MRB_ARGS_NONE());
+  mrb_define_module_function(mrb, display_module, "double_buffered?", mrb_narya_display_double_buffered, MRB_ARGS_NONE());
   mrb_define_module_function(mrb, display_module, "swap", mrb_narya_display_swap, MRB_ARGS_NONE());
 
   mrb_define_module_function(mrb, display_module, "draw_picture", mrb_narya_display_draw_picture, MRB_ARGS_REQ(3));
