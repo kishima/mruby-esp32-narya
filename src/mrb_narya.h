@@ -9,7 +9,7 @@
 
 MRB_BEGIN_DECL
 
-#define ESP32_NARYA_VERSION "0.2.0"
+#define ESP32_NARYA_VERSION "0.2.1"
 
 extern struct RClass *narya_data_class;
 
@@ -53,6 +53,9 @@ mrb_value mrb_narya_sprite_move_to(mrb_state *mrb, mrb_value self);
 mrb_value mrb_narya_sprite_move(mrb_state *mrb, mrb_value self);
 
 //Sound class
+mrb_value mrb_narya_sound_load(mrb_state *mrb, mrb_value self);
+mrb_value mrb_narya_sound_play(mrb_state *mrb, mrb_value self);
+mrb_value mrb_narya_sound_stop(mrb_state *mrb, mrb_value self);
 
 
 //Config module

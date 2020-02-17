@@ -10,27 +10,22 @@
 #include "mruby/data.h"
 #include "mruby/variable.h"
 #include "mrb_narya.h"
+#include "mrb_narya.hpp"
 
-#include "fabgl.h"
-#include "fabutils.h"
+//MRB_BEGIN_DECL
 
-#include "fmruby.h"
-#include "fmruby_app.h"
+extern NaryaRef gNaryaRef;
 
-extern fabgl::PS2Controller PS2Controller;
-extern FmrbSystemApp SystemApp;
-
-MRB_BEGIN_DECL
 mrb_value mrb_narya_input_available(mrb_state *mrb, mrb_value self)
 {
-  auto keyboard = PS2Controller.keyboard();
+  auto keyboard = gNaryaRef.fmrb_system_app->m_ps2->keyboard();
   int ret = keyboard->virtualKeyAvailable();
   return ret>0 ? mrb_true_value() : mrb_false_value();
 }
 
 mrb_value mrb_narya_input_keydown(mrb_state *mrb, mrb_value self)
 {
-  auto keyboard = PS2Controller.keyboard();
+  auto keyboard = gNaryaRef.fmrb_system_app->m_ps2->keyboard();
 
   int cnt = keyboard->virtualKeyAvailable(); 
   if(cnt>0){
@@ -53,7 +48,7 @@ mrb_value mrb_narya_input_keydown(mrb_state *mrb, mrb_value self)
 
 mrb_value mrb_narya_input_get_key(mrb_state *mrb, mrb_value self)
 {
-  auto keyboard = PS2Controller.keyboard();
+  auto keyboard = gNaryaRef.fmrb_system_app->m_ps2->keyboard();
   mrb_int vkey = 0;
   int cnt = keyboard->virtualKeyAvailable(); 
   if(cnt==1){
@@ -67,7 +62,7 @@ mrb_value mrb_narya_input_get_key(mrb_state *mrb, mrb_value self)
 
 mrb_value mrb_narya_input_pad_down(mrb_state *mrb, mrb_value self)
 {
-  FmrbMrubyEngine* engine = SystemApp.mruby_engign();
+  FmrbMrubyEngine* engine = gNaryaRef.fmrb_system_app->m_mruby_engine;
   uint8_t *map = engine->get_joypad_map();
 
   mrb_int pad;
@@ -80,4 +75,4 @@ mrb_value mrb_narya_input_pad_down(mrb_state *mrb, mrb_value self)
   return mrb_false_value();
 }
 
-MRB_END_DECL
+//MRB_END_DECL

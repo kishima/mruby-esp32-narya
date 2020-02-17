@@ -20,8 +20,8 @@ void mrb_mruby_esp32_narya_gem_init(mrb_state *mrb)
 
   struct RClass *narya_module = mrb_define_module(mrb, "Narya");
 
+  // Display
   struct RClass *display_module = mrb_define_module_under(mrb, narya_module, "Display");
-
   mrb_define_module_function(mrb, display_module, "width", mrb_narya_display_width, MRB_ARGS_NONE());
   mrb_define_module_function(mrb, display_module, "height", mrb_narya_display_height, MRB_ARGS_NONE());
 
@@ -41,32 +41,41 @@ void mrb_mruby_esp32_narya_gem_init(mrb_state *mrb)
   mrb_define_module_function(mrb, display_module, "font_size", mrb_narya_display_font_size, MRB_ARGS_REQ(2));
   mrb_define_module_function(mrb, display_module, "draw_text", mrb_narya_display_draw_text, MRB_ARGS_ARG(4,1));
 
-
+  // Input
   struct RClass *input_module = mrb_define_module_under(mrb, narya_module, "Input");
   mrb_define_module_function(mrb, input_module, "available", mrb_narya_input_available, MRB_ARGS_NONE());
   mrb_define_module_function(mrb, input_module, "keydown?", mrb_narya_input_keydown, MRB_ARGS_REQ(1));
   mrb_define_module_function(mrb, input_module, "get_key", mrb_narya_input_get_key, MRB_ARGS_NONE());
   mrb_define_module_function(mrb, input_module, "paddown?", mrb_narya_input_pad_down, MRB_ARGS_REQ(1));
 
+  //struct RClass *image_module = mrb_define_module_under(mrb, narya_module, "Image");
 
-  struct RClass *image_module = mrb_define_module_under(mrb, narya_module, "Image");
-
+  // Sprite
   struct RClass *sprite_class = mrb_define_class_under(mrb, narya_module, "Sprite", mrb->object_class);
   MRB_SET_INSTANCE_TT(sprite_class, MRB_TT_DATA);
   mrb_define_method(mrb, sprite_class, "initialize", mrb_narya_sprite_initialize, MRB_ARGS_REQ(1));
   mrb_define_method(mrb, sprite_class, "move_to", mrb_narya_sprite_move_to, MRB_ARGS_REQ(2));
   mrb_define_method(mrb, sprite_class, "move", mrb_narya_sprite_move, MRB_ARGS_REQ(2));
   
+  // Bitmap
   struct RClass *bitmap_class = mrb_define_class_under(mrb, narya_module, "Bitmap", mrb->object_class);
   MRB_SET_INSTANCE_TT(bitmap_class, MRB_TT_DATA);
   mrb_define_method(mrb, bitmap_class, "initialize", mrb_narya_bitmap_initialize, MRB_ARGS_NONE());
   mrb_define_method(mrb, bitmap_class, "load", mrb_narya_bitmap_load, MRB_ARGS_REQ(1));
   mrb_define_method(mrb, bitmap_class, "draw", mrb_narya_bitmap_draw, MRB_ARGS_REQ(2));
 
+  // Config
   struct RClass *config_module = mrb_define_module_under(mrb, narya_module, "Config");
-
   mrb_define_module_function(mrb, config_module, "firmware_ver", mrb_narya_config_firmware_ver, MRB_ARGS_NONE());
   mrb_define_module_function(mrb, config_module, "narya_ver", mrb_narya_config_narya_ver, MRB_ARGS_NONE());
+
+  // Sound
+  struct RClass *sound_module = mrb_define_module_under(mrb, narya_module, "Sound");
+  mrb_define_module_function(mrb, sound_module, "load", mrb_narya_sound_load, MRB_ARGS_NONE());
+  mrb_define_module_function(mrb, sound_module, "play", mrb_narya_sound_play, MRB_ARGS_NONE());
+  mrb_define_module_function(mrb, sound_module, "stop", mrb_narya_sound_stop, MRB_ARGS_NONE());
+
+
 
   /** To be implemented...
   * Display module

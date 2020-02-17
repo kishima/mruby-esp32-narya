@@ -10,13 +10,14 @@
 #include "mruby/data.h"
 #include "mruby/variable.h"
 #include "mrb_narya.h"
+#include "mrb_narya.hpp"
 
 #include "fabgl.h"
 #include "fabutils.h"
 
 #include "fmruby.h"
 
-MRB_BEGIN_DECL
+//MRB_BEGIN_DECL
 
 
 /**
@@ -36,4 +37,4 @@ mrb_value mrb_narya_config_narya_ver(mrb_state *mrb, mrb_value self)
 }
 
 
-MRB_END_DECL
+//MRB_END_DECL
