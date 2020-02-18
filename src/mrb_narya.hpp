@@ -16,4 +16,5 @@ struct NaryaRef{
   fabgl::Canvas        *fmrb_canvas;
   FmrbFileService      *fmrb_storage;
   FmrbSystemApp        *fmrb_system_app;
+  FmrbAudio            *fmrb_sound_engine;
 };

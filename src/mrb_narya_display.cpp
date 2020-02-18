@@ -34,6 +34,7 @@ void mrb_narya_init_resouce(mrb_state *mrb){
   gNaryaRef.fmrb_vga_controller = fmrb_system_app->m_vga;
   gNaryaRef.fmrb_canvas = fmrb_system_app->m_canvas;
   gNaryaRef.fmrb_storage = fmrb_system_app->m_storage;
+  gNaryaRef.fmrb_sound_engine = fmrb_system_app->m_mruby_engine->m_sound_engine;
 
   fmrb_vga_controller = gNaryaRef.fmrb_vga_controller;
   fmrb_canvas = gNaryaRef.fmrb_canvas;
