@@ -71,7 +71,7 @@ void mrb_mruby_esp32_narya_gem_init(mrb_state *mrb)
 
   // Sound
   struct RClass *sound_module = mrb_define_module_under(mrb, narya_module, "Sound");
-  mrb_define_module_function(mrb, sound_module, "load", mrb_narya_sound_load, MRB_ARGS_NONE());
+  mrb_define_module_function(mrb, sound_module, "load_mml", mrb_narya_sound_load, MRB_ARGS_REQ(1));
   mrb_define_module_function(mrb, sound_module, "play", mrb_narya_sound_play, MRB_ARGS_NONE());
   mrb_define_module_function(mrb, sound_module, "stop", mrb_narya_sound_stop, MRB_ARGS_NONE());
 

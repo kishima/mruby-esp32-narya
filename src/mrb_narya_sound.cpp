@@ -18,14 +18,16 @@ extern NaryaRef gNaryaRef;
 mrb_value mrb_narya_sound_load(mrb_state *mrb, mrb_value self)
 {
   FMRB_DEBUG(FMRB_LOG::DEBUG,"sound load\n");
-  gNaryaRef.fmrb_sound_engine->load();
+  char * mml = NULL;
+  mrb_get_args(mrb, "z", &mml);
+  if(mml) gNaryaRef.fmrb_sound_engine->load_mml(mml);
   return self;
 }
 
 mrb_value mrb_narya_sound_play(mrb_state *mrb, mrb_value self)
 {
   FMRB_DEBUG(FMRB_LOG::DEBUG,"sound play\n");
-  gNaryaRef.fmrb_sound_engine->play();
+  gNaryaRef.fmrb_sound_engine->play_mml();
   return self;
 }
 
