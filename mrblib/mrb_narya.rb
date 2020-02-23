@@ -102,6 +102,7 @@ module Narya
     K_LEFT           = 155
     K_RIGHT          = 157
   end
+
   module Pad
     NONE    = 0
     A       = 1
@@ -117,4 +118,23 @@ module Narya
     LEFT    = 11
     RIGHT   = 12
   end
+
+  def self.wait_key(key)
+    loop do
+      k = Input::get_key
+      if k==key
+        break
+      end
+    end
+  end
+
+  def self.wait_anykey
+    loop do
+      k = Input::get_key
+      if k!=Key::K_NONE
+        return k
+      end
+    end
+  end
+
 end

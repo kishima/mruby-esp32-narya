@@ -53,9 +53,10 @@ mrb_value mrb_narya_sprite_move_to(mrb_state *mrb, mrb_value self);
 mrb_value mrb_narya_sprite_move(mrb_state *mrb, mrb_value self);
 
 //Sound class
-mrb_value mrb_narya_sound_load(mrb_state *mrb, mrb_value self);
-mrb_value mrb_narya_sound_play(mrb_state *mrb, mrb_value self);
-mrb_value mrb_narya_sound_stop(mrb_state *mrb, mrb_value self);
+mrb_value mrb_narya_sound_load_mml(mrb_state *mrb, mrb_value self);
+mrb_value mrb_narya_sound_play_mml(mrb_state *mrb, mrb_value self);
+mrb_value mrb_narya_sound_play_all(mrb_state *mrb, mrb_value self);
+mrb_value mrb_narya_sound_stop_all(mrb_state *mrb, mrb_value self);
 
 
 //Config module
